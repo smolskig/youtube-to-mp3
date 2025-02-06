@@ -1,3 +1,16 @@
+import './style.css'
+
+document.querySelector('#app').innerHTML = `
+  <div class="container">
+      <h1>Youtube to MP3</h1>
+      <form>
+          <input type="text" name="url" placeholder="Enter Youtube URL">
+          <button type="submit">Download</button>
+      </form>
+  </iframe>
+  </div>
+`
+
 
 const form = document.querySelector('form');
 
@@ -17,6 +30,7 @@ form.addEventListener('submit', (e) => {
     const url = e.target[0].value;
     const urlMetadata = `https://www.youtube.com/oembed?url=` + url + `&format=json`;
 
+    fetch("http://localhost:8082/get-video-info", { method: 'GET'}).then(res => console.log(res))
    
     return fetch(urlMetadata, { method: 'GET'}).then((response) => {
         if(!response.ok) {
