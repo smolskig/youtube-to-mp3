@@ -30,17 +30,17 @@ form.addEventListener('submit', (e) => {
     const url = e.target[0].value;
     const urlMetadata = `https://www.youtube.com/oembed?url=` + url + `&format=json`;
 
-    fetch("http://localhost:8082/get-video-info", { method: 'GET'}).then(res => console.log(res))
-   
-    return fetch(urlMetadata, { method: 'GET'}).then((response) => {
-        if(!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+    fetch(`http://localhost:8082/get-video-info?url=${url}`, { method: 'GET'}).then(res => console.log(res))
+    
+    // return fetch(urlMetadata, { method: 'GET'}).then((response) => {
+    //     if(!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //     }
 
-        return response.json()
-    })
-    .then(data =>handleVideoData(data))
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+    //     return response.json()
+    // })
+    // .then(data =>handleVideoData(data))
+    // .catch((error) => {
+    //     console.error('Error:', error);
+    // });
 });
