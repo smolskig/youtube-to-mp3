@@ -1,6 +1,6 @@
-import './style.css'
+import "./style.css";
 
-document.querySelector('#app').innerHTML = `
+document.querySelector("#app").innerHTML = `
   <div class="container">
       <h1>Youtube to MP3</h1>
       <form>
@@ -9,38 +9,52 @@ document.querySelector('#app').innerHTML = `
       </form>
   </iframe>
   </div>
-`
+`;
 
-
-const form = document.querySelector('form');
+const form = document.querySelector("form");
 
 const handleVideoData = (data) => {
-    const videoTitle = document.createElement('h2')
-    const videoThumbnail = document.createElement('img')
-    
-    videoTitle.textContent = data.title;
-    videoThumbnail.src = data.thumbnail_url;
+  const videoTitle = document.createElement("h2");
+  const videoThumbnail = document.createElement("img");
 
-    document.body.appendChild(videoTitle);
-    document.body.appendChild(videoThumbnail);
-}
+  videoTitle.textContent = data.title;
+  videoThumbnail.src = data.thumbnail_url;
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const url = e.target[0].value;
-    const urlMetadata = `https://www.youtube.com/oembed?url=` + url + `&format=json`;
+  document.body.appendChild(videoTitle);
+  document.body.appendChild(videoThumbnail);
+};
 
-    fetch(`http://localhost:8082/get-video-info?url=${url}`, { method: 'GET'}).then(res => console.log(res))
-    
-    // return fetch(urlMetadata, { method: 'GET'}).then((response) => {
-    //     if(!response.ok) {
-    //         throw new Error('Network response was not ok');
-    //     }
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const url = e.target[0].value;
+  const urlMetadata =
+    `https://www.youtube.com/oembed?url=` + url + `&format=json`;
 
-    //     return response.json()
-    // })
-    // .then(data =>handleVideoData(data))
-    // .catch((error) => {
-    //     console.error('Error:', error);
-    // });
+  const res = await fetch(`http://localhost:8082/get-video-info?url=${url}`, {
+    method: "GET",
+  });
+
+  if (!res.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  let reader = res.body.getReader();
+  let chunks = [];
+  let done = false;
+
+  while (!done) {
+    const { value, done: readerDone } = await reader.read();
+    chunks.push(value);
+    done = readerDone;
+  }
+
+  const audioBlob = new Blob(chunks, { type: "audio/mpeg" });
+  const audioUrl = URL.createObjectURL(audioBlob);
+  const a = document.createElement("a");
+  a.href = audioUrl;
+  a.download = "video.mp3";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 });
