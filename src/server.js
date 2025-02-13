@@ -6,10 +6,20 @@ import cors from "cors";
 var app = express();
 app.use(cors())
 
-app.get("/get-video-info", function(req, res) {
+app.get("/get-metadata", async function(req, res) {
+    const url = req.query.url;
+    const info = await ytdl.getInfo(url);
+    const videoData = {
+        title: info.videoDetails.title,
+        thumbnail_url: info.videoDetails.thumbnails[0].url
+    };
+
+    res.json(videoData);
+})
+
+app.get("/get-audio", function(req, res) {
     const url = req.query.url;
     res.setHeader('Content-Type', 'audio/mpeg');
-    res.setHeader('Content-Disposition', 'attachment; filename="video.mp3"');
     const videoStream = ytdl(url, { filter: 'audioonly'});
 
     videoStream.pipe(res);
