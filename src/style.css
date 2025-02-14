@@ -21,3 +21,51 @@ a {
 a:hover {
   color: #535bf2;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  display: flex;
+}
+form input {
+  width: 300px;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  background-color: #333;
+  color: #fff;
+  outline: none;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 300px;
+  gap: .5rem;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  background-color: #333;
+  color: #fff;
+}
+
+.btn:hover {
+  background-color: #535bf2;
+  cursor: pointer;
+}
+
+.video-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}

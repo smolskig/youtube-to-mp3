@@ -3,9 +3,12 @@ import './style.css';
 document.querySelector('#app').innerHTML = `
   <div class="container">
       <h1>Youtube to MP3</h1>
+      <h3>Enter a Youtube URL to download the audio</h3>
       <form>
           <input type="text" name="url" placeholder="Enter Youtube URL">
-          <button type="submit">Search</button>
+          <button class="btn loading" type="submit">
+            Search
+          </button>
       </form>
       <div class="video-info"></div>
   </iframe>
@@ -51,7 +54,7 @@ const handleVideoMetadata = (url, metadata) => {
   videoTag.innerHTML = `
     <h1>${metadata.title}</h1>
     <img src="${metadata.thumbnail_url}" alt="${metadata.title}">
-    <button class="download-btn">Download</button>
+    <button class="btn download-btn">Download</button>
   `;
 
   videoTag.querySelector('.download-btn').addEventListener('click', () => {
