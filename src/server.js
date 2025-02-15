@@ -8,7 +8,7 @@ app.use(cors())
 
 app.get("/get-metadata", async function(req, res) {
     const url = req.query.url;
-    const info = await ytdl.getInfo(url);
+    const info = await ytdl.getInfo(url, { quality: 'highest' });
     const videoData = {
         title: info.videoDetails.title,
         thumbnail_url: info.videoDetails.thumbnails[0].url
@@ -20,7 +20,7 @@ app.get("/get-metadata", async function(req, res) {
 app.get("/get-audio", function(req, res) {
     const url = req.query.url;
     res.setHeader('Content-Type', 'audio/mpeg');
-    const videoStream = ytdl(url, { filter: 'audioonly'});
+    const videoStream = ytdl(url, { filter: 'audioonly', quality: 'highestaudio' });
 
     videoStream.pipe(res);
 

@@ -1,6 +1,7 @@
 import './style.css';
 
 document.querySelector('#app').innerHTML = `
+<div class="root">
   <div class="container">
       <h1>Youtube to MP3</h1>
       <h3>Enter a Youtube URL to download the audio</h3>
@@ -11,8 +12,8 @@ document.querySelector('#app').innerHTML = `
           </button>
       </form>
       <div class="video-info"></div>
-  </iframe>
   </div>
+</div>
 `;
 
 const form = document.querySelector('form');
@@ -48,12 +49,20 @@ const downloadMusic = async (url, metadata) => {
 };
 
 const handleVideoMetadata = (url, metadata) => {
-  console.log(metadata);
   const videoTag = document.querySelector('.video-info');
 
   videoTag.innerHTML = `
+      <div class="skeleton">
+        <div class="skeleton-title"></div>
+        <div class="skeleton-thumbnail"></div>
+      </div>
+  `;
+
+  videoTag.innerHTML = `
     <h1>${metadata.title}</h1>
-    <img src="${metadata.thumbnail_url}" alt="${metadata.title}">
+    <div class="video-thumbnail">
+      <img src="${metadata.thumbnail_url}" alt="${metadata.title}">
+    </div>
     <button class="btn download-btn">Download</button>
   `;
 
@@ -65,16 +74,15 @@ const handleVideoMetadata = (url, metadata) => {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const url = e.target[0].value;
-  const metadata = await fetch(
-    `http://localhost:8082/get-metadata?url=${url}`,
-    {
-      method: 'GET',
-    }
-  );
+  const urlMetadata =
+    `https://www.youtube.com/oembed?url=` + url + `&format=json`;
 
-  if (!metadata.ok) {
-    throw new Error('Network response was not ok');
-  }
-
-  handleVideoMetadata(url, await metadata.json());
+  fetch(urlMetadata, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => handleVideoMetadata(url, data));
 });
