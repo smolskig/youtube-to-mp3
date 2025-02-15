@@ -18,7 +18,8 @@ document.querySelector('#app').innerHTML = `
 
 const form = document.querySelector('form');
 
-const downloadMusic = async (url, metadata) => {
+const downloadAudio = async (url, metadata) => {
+  document.querySelector('.video-thumbnail').classList.add('video-thumbnail-loading');
   const res = await fetch(`http://localhost:8082/get-audio?url=${url}`, {
     method: 'GET',
   });
@@ -26,7 +27,6 @@ const downloadMusic = async (url, metadata) => {
   if (!res.ok) {
     throw new Error('Network response was not ok');
   }
-
   let reader = res.body.getReader();
   let chunks = [];
   let done = false;
@@ -46,6 +46,7 @@ const downloadMusic = async (url, metadata) => {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  document.querySelector('.video-thumbnail').classList.remove('video-thumbnail-loading');
 };
 
 const handleVideoMetadata = (url, metadata) => {
@@ -67,7 +68,7 @@ const handleVideoMetadata = (url, metadata) => {
   `;
 
   videoTag.querySelector('.download-btn').addEventListener('click', () => {
-    downloadMusic(url, metadata);
+    downloadAudio(url, metadata);
   });
 };
 
